@@ -16,7 +16,7 @@
     <!-- Styles -->
     <link href="http://lrak.local/css/app.css" rel="stylesheet">
     <style>
-        .loader {
+        #loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
             border-top: 16px solid blue;
@@ -32,7 +32,7 @@
             left: 44%;
         }
 
-        .modal-overlay {
+        #modal-overlay {
             background: gray;
             width: 100%;
             height: 100%;
@@ -65,23 +65,23 @@
         function show_loader(hide = false) {
             if (hide) {
                 $("#loader").removeClass("visible").addClass("invisible");
-                $("#modal-overlay").addClass('invisible');
+                $("#modal-overlay").removeClass("visible").addClass('invisible');
                 return;
             }//..... end if() .....//
 
             if($("#loader").hasClass("invisible")){
                 $("#loader").removeClass("invisible").addClass("visible");
-                $("#modal-overlay").addClass('visible');
+                $("#modal-overlay").removeClass("invisible").addClass('visible');
             }else{
                 $("#loader").removeClass("visible").addClass("invisible");
-                $("#modal-overlay").addClass('invisible');
+                $("#modal-overlay").removeClass("visible").addClass('invisible');
             }
         }
     </script>
 </head>
 <body>
-    <div class="loader invisible"></div>
-    <div class="modal-overlay invisible"></div>
+    <div id="loader" class="invisible"></div>
+    <div id="modal-overlay" class="invisible"></div>
     <div id="app"></div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

@@ -1,9 +1,67 @@
 import React, {Component} from 'react';
+import {NotificationManager} from "react-notifications";
 
 class Register extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            name: '',
+            email: '',
+            password: '',
+            password_confirmation: ''
+        };
+
+        this.isLoggedIn();
     }//..... end of constructor() .....//
+
+    handleInputChange = (name, value) => {
+        this.setState((prevState) => {
+            prevState[name] = value;
+            return prevState;
+        });
+    };
+
+    handleRegistration = () => {
+        if (!this.state.name || !this.state.email || !this.state.password || !this.state.password_confirmation) {
+            NotificationManager.error('Please provide all the fields correctly.', 'Error');
+            return false;
+        }//..... end if() .....//
+
+        if (this.state.password != this.state.password_confirmation) {
+            NotificationManager.error('Password and confirm password don not match.', 'Error');
+            return false;
+        }//..... end if() .....//
+
+        show_loader();
+
+        axios.post(BaseUrl + '/api/register', this.state)
+            .then((response) => {
+                show_loader(true);
+                if (response.data.status === true) {
+                    NotificationManager.success(response.data.message, 'Success');
+                    this.props.history.push('/login');
+                } else
+                    NotificationManager.error(response.data.message, 'Error');
+            }).catch((err) => {
+                console.log(err);
+                show_loader(true);
+                NotificationManager.error(`Internal server error occurred, Please try later.`, 'Error');
+            });
+    };//..... end of handleRegistration() ......//
+
+    isLoggedIn = () => {
+        let isAuthenticated = localStorage.getItem('isAuthenticated');
+        if (isAuthenticated && isAuthenticated === 'true') {
+            let from = '/';
+            if (this.props.location.state && this.props.location.state.from)
+                from = this.props.location.state.from;
+            return this.props.history.push(from);
+        }
+    };//..... end of isLoggedIn() .....//
+
+    componentDidUpdate = () => {
+        this.isLoggedIn();
+    };//..... end of componentDidUpdate() ....//
 
     render() {
         return (
@@ -14,49 +72,42 @@ class Register extends Component {
                             <div className="card">
                                 <div className="card-header">Register</div>
                                 <div className="card-body">
-                                    <form method="POST" action="http://localhost/laravel6/public/register">
-                                        <input type="hidden" name="_token"
-                                               defaultValue="jwFCl2PzgEP9MKgphNNRvWn1j6Pga8q9ow9RJA9B"/>
-                                        <div className="form-group row">
-                                            <label htmlFor="name"
-                                                   className="col-md-4 col-form-label text-md-right">Name</label>
-                                            <div className="col-md-6">
-                                                <input id="name" type="text" className="form-control " name="name" required autoComplete="name" autoFocus/>
-                                            </div>
+
+                                    <div className="form-group row">
+                                        <label htmlFor="name" className="col-md-4 col-form-label text-md-right">Name</label>
+                                        <div className="col-md-6">
+                                            <input type="text" className="form-control " name="name" autoFocus onChange={(e) => this.handleInputChange('name', e.target.value)}/>
                                         </div>
-                                        <div className="form-group row">
-                                            <label htmlFor="email" className="col-md-4 col-form-label text-md-right">E-Mail
-                                                Address</label>
-                                            <div className="col-md-6">
-                                                <input id="email" type="email" className="form-control " name="email" required autoComplete="email"/>
-                                            </div>
+                                    </div>
+
+                                    <div className="form-group row">
+                                        <label htmlFor="email" className="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+                                        <div className="col-md-6">
+                                            <input type="email" className="form-control " name="email" onChange={(e) => this.handleInputChange('email', e.target.value)}/>
                                         </div>
-                                        <div className="form-group row">
-                                            <label htmlFor="password"
-                                                   className="col-md-4 col-form-label text-md-right">Password</label>
-                                            <div className="col-md-6">
-                                                <input id="password" type="password" className="form-control "
-                                                       name="password" required autoComplete="new-password"/>
-                                            </div>
+                                    </div>
+
+                                    <div className="form-group row">
+                                        <label htmlFor="password" className="col-md-4 col-form-label text-md-right">Password</label>
+                                        <div className="col-md-6">
+                                            <input type="password" className="form-control" name="password"  onChange={(e) => this.handleInputChange('password', e.target.value)}/>
                                         </div>
-                                        <div className="form-group row">
-                                            <label htmlFor="password-confirm"
-                                                   className="col-md-4 col-form-label text-md-right">Confirm
-                                                Password</label>
-                                            <div className="col-md-6">
-                                                <input id="password-confirm" type="password" className="form-control"
-                                                       name="password_confirmation" required
-                                                       autoComplete="new-password"/>
-                                            </div>
+                                    </div>
+
+                                    <div className="form-group row">
+                                        <label htmlFor="password-confirm" className="col-md-4 col-form-label text-md-right">Confirm Password</label>
+                                        <div className="col-md-6">
+                                            <input type="password" className="form-control" name="password_confirmation"  onChange={(e) => this.handleInputChange('password_confirmation', e.target.value)}/>
                                         </div>
-                                        <div className="form-group row mb-0">
-                                            <div className="col-md-6 offset-md-4">
-                                                <button type="submit" className="btn btn-primary">
-                                                    Register
-                                                </button>
-                                            </div>
+                                    </div>
+
+                                    <div className="form-group row mb-0">
+                                        <div className="col-md-6 offset-md-4">
+                                            <button type="button" className="btn btn-primary" onClick={this.handleRegistration}>
+                                                Register
+                                            </button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

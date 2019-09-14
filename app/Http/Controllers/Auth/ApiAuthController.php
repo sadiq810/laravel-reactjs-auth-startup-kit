@@ -63,4 +63,24 @@ class ApiAuthController extends Controller
             ])->setStatusCode(500);
         }//..... end of try-catch() .....//
     }//..... end of getAccessToken() .....//
-}
+
+    /**
+     * @return array
+     * Register new user.
+     */
+    public function register()
+    {
+        $validator = Validator::make(request()->all(), [
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        if ($validator->fails())
+            return ['status' => false, 'message' => implode(' ', $validator->errors()->all())];
+
+        User::create(array_merge(['password' => bcrypt(request()->password)], request()->only(['name', 'email'])));
+
+        return ['status' => true, 'message' => 'User registered successfully.'];
+    }//..... end of register() .....//
+}//..... end of class.

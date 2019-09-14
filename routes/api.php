@@ -19,3 +19,4 @@ use Illuminate\Http\Request;
 
 
 Route::post('login', 'Auth\ApiAuthController@login');
+Route::post('register', 'Auth\ApiAuthController@register');
