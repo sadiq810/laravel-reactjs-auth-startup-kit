@@ -1,9 +1,30 @@
 import React, {Component} from 'react';
+import {NotificationManager} from "react-notifications";
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: {}
+        }
     }//..... end of constructor() .....//
+
+    componentDidMount() {
+        this.getLoggedInUserToTestPrivateRoute();
+    }//..... end of componentDidMount() .....//
+
+    getLoggedInUserToTestPrivateRoute = () => {
+        show_loader();
+        axios.get(BaseUrl + '/api/user', {}).then((response) => {
+            show_loader(true);
+           this.setState(() => {
+               return {user: response.data}
+           });
+        }).catch((err) => {
+            show_loader(true);
+            NotificationManager.error(`Internal server error occurred, Please try later.`, 'Error');
+        });
+    };//..... end of getLoggedInUserToTestPrivateRoute() .....//
 
     render() {
         return (
@@ -15,8 +36,10 @@ class Dashboard extends Component {
                                 <div className="card-header">Dashboard</div>
 
                                 <div className="card-body">
-
                                     You are logged in!
+                                    <hr/>
+                                    LoggedIn User details <br/>
+                                    { JSON.stringify(this.state.user) }
                                 </div>
                             </div>
                         </div>

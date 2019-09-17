@@ -83,4 +83,17 @@ class ApiAuthController extends Controller
 
         return ['status' => true, 'message' => 'User registered successfully.'];
     }//..... end of register() .....//
+
+    /**
+     * @param Request $request
+     * @return array
+     * Log out user and revoke tokens.
+     */
+    public function logout(Request $request)
+    {
+        foreach($request->user()->tokens as $token)
+            $token->revoke();
+
+        return ['status' => true, 'message' => 'Tokens revoked successfully.'];
+    }//..... end of logout() .....//
 }//..... end of class.

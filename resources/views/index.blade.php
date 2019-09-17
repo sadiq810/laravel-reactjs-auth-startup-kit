@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
+    <title>Laravel & React Auth Kit</title>
 
     <!-- Scripts -->
     <script src="/js/app.js" defer></script>
@@ -14,51 +14,9 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="http://lrak.local/css/app.css" rel="stylesheet">
-    <style>
-        #loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid blue;
-            border-right: 16px solid green;
-            border-bottom: 16px solid red;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-            position: absolute;
-            z-index: 999;
-            top: 30%;
-            left: 44%;
-        }
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 
-        #modal-overlay {
-            background: gray;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: 99;
-            opacity: 0.5;
-        }
-
-        .visible{
-            display: block;
-        }
-
-        .invisible{
-            display: none;
-        }
-
-        @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
     <script>
         var BaseUrl = '{{ url('/') }}';
 
@@ -69,14 +27,14 @@
                 return;
             }//..... end if() .....//
 
-            if($("#loader").hasClass("invisible")){
+            if ($("#loader").hasClass("invisible")) {
                 $("#loader").removeClass("invisible").addClass("visible");
                 $("#modal-overlay").removeClass("invisible").addClass('visible');
-            }else{
+            } else {
                 $("#loader").removeClass("visible").addClass("invisible");
                 $("#modal-overlay").removeClass("visible").addClass('invisible');
-            }
-        }
+            }//..... end of if-else() .....//
+        }//.... end of show_loader() .....//
     </script>
 </head>
 <body>

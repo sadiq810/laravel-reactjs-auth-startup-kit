@@ -19,7 +19,7 @@ class Register extends Component {
             prevState[name] = value;
             return prevState;
         });
-    };
+    };//..... end of handleInputChange() .....//
 
     handleRegistration = () => {
         if (!this.state.name || !this.state.email || !this.state.password || !this.state.password_confirmation) {

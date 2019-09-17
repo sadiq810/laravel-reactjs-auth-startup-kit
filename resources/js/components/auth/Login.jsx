@@ -24,7 +24,7 @@ class Login extends Component {
             if (this.props.location.state && this.props.location.state.from)
                 from = this.props.location.state.from;
             return this.props.history.push(from);
-        }
+        }//..... end if() ....//
     };//..... end of isLoggedIn() .....//
 
     handleSignInClick = () => {
@@ -72,6 +72,8 @@ class Login extends Component {
         localStorage.setItem('userData', JSON.stringify(data));
         localStorage.setItem('isRemember', this.state.isRemember ? 'true' : 'false');
         localStorage.setItem('loggedInTime', (new Date()).getTime());
+        window.axios.defaults.headers.common['Accept'] = 'application/json';
+        window.axios.defaults.headers.common['Authorization'] = 'Bearer '+ data.access_token;
         this.isLoggedIn();
     };//..... end of persistUserDetails() .....//
 
@@ -111,9 +113,6 @@ class Login extends Component {
                                             <button type="button" className="btn btn-primary" onClick={this.handleSignInClick}>
                                                 Login
                                             </button>
-                                            <a className="btn btn-link" href="#">
-                                                Forgot Your Password?
-                                            </a>
                                         </div>
                                     </div>
                                 </div>

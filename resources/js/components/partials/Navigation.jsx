@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
+import {NotificationManager} from "react-notifications";
 
 class Navigation extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class Navigation extends Component {
     }//..... end of constructor() .....//
 
     handleLogout = () => {
+        this.revokeAccessToken();
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userData');
         localStorage.removeItem('loggedInTime');
@@ -20,9 +22,9 @@ class Navigation extends Component {
         this.updateLocalDetails();
     };//..... end of componentDidUpdate() .....//
 
-    componentDidMount = () => {
+    UNSAFE_componentWillMount = () => {
         this.updateLocalDetails();
-    };//..... end of componentDidMount() .....//
+    };//..... end of UNSAFE_componentWillMount() .....//
 
     updateLocalDetails = () => {
         let userData = localStorage.getItem('userData');
@@ -35,9 +37,13 @@ class Navigation extends Component {
                 if (rememberMe !== 'true' && (now - lastLoggedInTime) > (10000*60*24)) // if user doesn't perform any activity in 24 minutes than log him/her out.
                     this.handleLogout();
 
-                window.axios.defaults.headers.common['Accept'] = 'application/json';
-                window.axios.defaults.headers.common['Authorization'] = 'Bearer '+ userData.access_token;
+                if (window.axios.defaults.headers.common['Authorization'] == undefined) {
+                    window.axios.defaults.headers.common['Accept'] = 'application/json';
+                    window.axios.defaults.headers.common['Authorization'] = 'Bearer '+ userData.access_token;
+                }//..... end if() .....//
+
                 localStorage.setItem('loggedInTime', (new Date()).getTime());
+
                 if (this.state.name == '')
                     this.setState({name: userData.name || 'Anonymous'})
             } else {
@@ -45,6 +51,17 @@ class Navigation extends Component {
             }
         }//..... end if() .....//
     };//..... end of updateLocalDetails() ....//
+
+    revokeAccessToken = () => {
+        show_loader();
+        axios.get(BaseUrl + '/api/user/logout', {}).then((response) => {
+            show_loader(true);
+            NotificationManager.success(`Logout successfully.`, 'Success');
+        }).catch((err) => {
+            show_loader(true);
+            NotificationManager.error(`Internal server error occurred, Please try later.`, 'Error');
+        });
+    };//..... end of revokeAccessToken() .....//
 
     render() {
         let isAuthenticated = localStorage.getItem('isAuthenticated');
