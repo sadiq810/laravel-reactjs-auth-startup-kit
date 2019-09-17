@@ -1,4 +1,5 @@
-##Laravel & Reactjs Auth Startup kit
+## Laravel & Reactjs Auth Startup kit
+
 <p align="center">
 <a href="https://laravel.com" target="_blank">
     <img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400">
